@@ -1,0 +1,8 @@
+Operator: Hello, how may I help you ?
+Customer: Hello, I'm calling because I need to declare an accident on my main vehicle.
+Operator: Ok, can you please give me your name ?
+Customer: My name is Sarah London.
+Operator: Could you please give me your birth date ?
+Customer: 1986, July the 10th.
+Operator: Ok, I've got your contract and I'm happy to share with you that we'll be able to reimburse all expenses linked to this accident.
+Customer: Oh great, many thanks.
