@@ -17,14 +17,6 @@ import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 import kotlin.text.Charsets;
 
-/**
- * How to run the demo: In a terminal, run:
- *  MODEL_NAME=codellama docker run -p 11434:11434
- *  langchain4j/ollama-${MODEL_NAME}:latest
- *
- * Then run method main.
- * 
- */
 public class MainExtractJsonCodeLlama {
 
     static final String MODEL_NAME = "codellama"; // try "orca-mini", "mistral", "llama2", "llama3", "codellama", "phi" or "tinyllama"
