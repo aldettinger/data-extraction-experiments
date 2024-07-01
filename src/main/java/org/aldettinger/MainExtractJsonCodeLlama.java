@@ -19,15 +19,9 @@ import kotlin.text.Charsets;
 
 public class MainExtractJsonCodeLlama {
 
-    static final String MODEL_NAME = "codellama"; // try "orca-mini", "mistral", "llama2", "llama3", "codellama", "phi" or "tinyllama"
+    static final String MODEL_NAME = "codellama"; // Other values could be "orca-mini", "mistral", "llama2", "llama3", "codellama", "phi" or "tinyllama"
     static final String LANGCHAIN4J_OLLAMA_IMAGE_NAME = "langchain4j/ollama-" + MODEL_NAME + ":latest";
 
-    /**
-     * + Co-reference resolved
-     * + JSON schema fully respected
-     * + Customer satisfaction detection seems good
-     * + The text summary is quite concise and accurate
-     */
     static final String CODE_LLAMA_PROMPT = "Extract information from the text delimited by triple backticks: ```{{text}}```."
                                             + "The output should be formatted into JSON, strictly conforming to the JSON schema delimited by triple dollars."
                                             + "$$${"
@@ -71,7 +65,7 @@ public class MainExtractJsonCodeLlama {
 
         String[] resourceNames = {
                 "01_sarah-london-10-07-1986-satisfied.txt", "02_john-doe-01-11-2001-unsatisfied.txt",
-                "03_kate-boss-04-07-1980-satisfied.txt" };
+                "03_kate-boss-13-08-1999-satisfied.txt" };
 
         for (String resourceName : resourceNames) {
             String text = resourceToString(String.format("/texts/%s", resourceName), Charsets.UTF_8);
