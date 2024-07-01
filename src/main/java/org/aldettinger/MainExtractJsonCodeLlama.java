@@ -69,7 +69,9 @@ public class MainExtractJsonCodeLlama {
 
         CamelExtractor extractor = AiServices.create(CamelExtractor.class, model);
 
-        String[] resourceNames = { "01_sarah-london-10-07-1986-satisfied.txt", "02_john-doe-01-11-2001-unsatisfied.txt" };
+        String[] resourceNames = {
+                "01_sarah-london-10-07-1986-satisfied.txt", "02_john-doe-01-11-2001-unsatisfied.txt",
+                "03_kate-boss-04-07-1980-satisfied.txt" };
 
         for (String resourceName : resourceNames) {
             String text = resourceToString(String.format("/texts/%s", resourceName), Charsets.UTF_8);
