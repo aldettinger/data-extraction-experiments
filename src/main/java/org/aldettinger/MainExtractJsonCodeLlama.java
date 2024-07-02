@@ -44,6 +44,8 @@ public class MainExtractJsonCodeLlama {
                                             + "The customerBirthday field should be formatted as DD-MM-YYYY."
                                             + "Only fields appearing in the JSON schema should be output. Do not create extra field.";
 
+    static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+
     interface CamelExtractor {
         @UserMessage(CODE_LLAMA_PROMPT)
         String extractFromText(@V("text") String text);
@@ -51,10 +53,10 @@ public class MainExtractJsonCodeLlama {
 
     public static void main(String[] args) throws IOException {
 
-        String url = String.format("http://%s:%d", "localhost", 11434);
+        String modelServingUrl = String.format("http://%s:%d", "localhost", 11434);
 
         ChatLanguageModel model = OllamaChatModel.builder()
-                .baseUrl(url)
+                .baseUrl(modelServingUrl)
                 .modelName(MODEL_NAME)
                 .temperature(0.0)
                 .format("json")
@@ -63,15 +65,15 @@ public class MainExtractJsonCodeLlama {
 
         CamelExtractor extractor = AiServices.create(CamelExtractor.class, model);
 
-        String[] resourceNames = {
+        String[] conversationResourceNames = {
                 "01_sarah-london-10-07-1986-satisfied.txt", "02_john-doe-01-11-2001-unsatisfied.txt",
                 "03_kate-boss-13-08-1999-satisfied.txt" };
 
-        for (String resourceName : resourceNames) {
-            String text = resourceToString(String.format("/texts/%s", resourceName), Charsets.UTF_8);
+        for (String conversationResourceName : conversationResourceNames) {
+            String conversation = resourceToString(String.format("/texts/%s", conversationResourceName), Charsets.UTF_8);
 
             long begin = System.currentTimeMillis();
-            String answer = extractor.extractFromText(text);
+            String answer = extractor.extractFromText(conversation);
             long duration = System.currentTimeMillis() - begin;
 
             System.out.println(toPrettyFormat(answer));
@@ -82,11 +84,7 @@ public class MainExtractJsonCodeLlama {
     public static String toPrettyFormat(String jsonString) {
         try {
             JsonObject json = JsonParser.parseString(jsonString).getAsJsonObject();
-
-            Gson gson = new GsonBuilder().setPrettyPrinting().create();
-            String prettyJson = gson.toJson(json);
-
-            return prettyJson;
+            return GSON.toJson(json);
         } catch (Exception ex) {
             return String.format("UNPARSEABLE JSON RETURNED BY MODEL:\n%s\n", jsonString);
         }

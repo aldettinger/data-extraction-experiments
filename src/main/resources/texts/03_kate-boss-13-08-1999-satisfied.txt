@@ -1,12 +1,12 @@
-Operator: Hello, how may I help you ?
-Customer: Hello, I am currently at the police station because I've got an accident. The police would need a proof that I have an insurance. Could you please help me ?
-Operator: Sure, could you please remind me your name and birth date ?
+Operator: Hello, how may I help you?
+Customer: Hello, I am currently at the police station because I've got an accident. The police would need a proof that I have an insurance. Could you please help me?
+Operator: Sure, could you please remind me your name and birth date?
 Customer: Of course, my name is Kate Hart and I was born on August the thirteen in the year nineteen ninety nine.
-Operator: I'm sorry Kate but we don't have any contract in our records.
-Customer: Oh, I'm sorry that I've made a mistake. Actually my last name is not Hart but Boss. It changed since I'm married.
-Operator: Indeed, I have now found your contract and everything looks good. Shall I send the proof of insurance to the police station ?
-Customer: Oh, if possible my husband will go directly to your office in order to get it.
-Operator: Yes that's possible. I will let the paper at the entrance. Your beloved could just ask it to the front desk.
+Operator: I'm sorry Kate, but we don't have any contract in our records.
+Customer: Oh, I'm sorry that I've made a mistake. Actually, my last name is not Hart, but Boss. It changed since I'm married.
+Operator: Indeed, I have now found your contract and everything looks good. Shall I send the proof of insurance to the police station?
+Customer: Oh, if possible, my husband will go directly to your office in order to get it.
+Operator: Yes, that's possible. I will let the paper at the entrance. Your beloved could just ask it to the front desk.
 Customer: Many thanks. That's so helpful. I'm a bit more relieved now.
 Operator: Sure, you're welcome Kate. Please come back to us any time in case more information is needed. Bye.
 Customer: Bye.
