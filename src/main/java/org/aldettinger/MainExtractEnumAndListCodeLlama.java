@@ -13,32 +13,27 @@ import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 import kotlin.text.Charsets;
 
-public class MainExtracteEnumAndListCodeLlama {
+public class MainExtractEnumAndListCodeLlama {
 
     static final String MODEL_NAME = "codellama"; // Other values could be "orca-mini", "mistral", "llama2", "llama3", "codellama", "phi" or "tinyllama"
     static final String LANGCHAIN4J_OLLAMA_IMAGE_NAME = "langchain4j/ollama-" + MODEL_NAME + ":latest";
 
-    /**
-     * The customer birthday date format need to be forced to comply with what langchain4j gson parser need.
-     */
     static final String ENUM_AND_LIST_EXTRACT_PROMPT
-            = "Extract information about a customer from the text delimited by triple backticks: ```{{text}}```."
-              + "The customerBirthday field should be formatted as YYYY-MM-DD."
-              + "The summary field should concisely relate the customer main ask.";
+            = "Extract information about a customer from the text delimited by triple backticks: ```{{text}}```.";
 
     enum GENDER {
         MALE,
         FEMALE
     }
 
-    static class CustomPojo {
+    static class EnumAndListPojo {
         private GENDER gender;
         private List<String> topics;
     }
 
-    interface CamelCustomPojoExtractor {
+    interface CamelEnumAndListExtractor {
         @UserMessage(ENUM_AND_LIST_EXTRACT_PROMPT)
-        CustomPojo extractFromText(@V("text") String text);
+        EnumAndListPojo extractFromText(@V("text") String text);
     }
 
     public static void main(String[] args) throws IOException {
@@ -53,7 +48,7 @@ public class MainExtracteEnumAndListCodeLlama {
                 .timeout(Duration.ofMinutes(1L))
                 .build();
 
-        CamelCustomPojoExtractor extractor = AiServices.create(CamelCustomPojoExtractor.class, model);
+        CamelEnumAndListExtractor extractor = AiServices.create(CamelEnumAndListExtractor.class, model);
 
         String[] conversationResourceNames = {
                 "01_sarah-london-10-07-1986-satisfied.txt", "02_john-doe-01-11-2001-unsatisfied.txt",
@@ -63,7 +58,7 @@ public class MainExtracteEnumAndListCodeLlama {
             String conversation = resourceToString(String.format("/texts/%s", conversationResourceName), Charsets.UTF_8);
 
             long begin = System.currentTimeMillis();
-            CustomPojo answer = extractor.extractFromText(conversation);
+            EnumAndListPojo answer = extractor.extractFromText(conversation);
             long duration = System.currentTimeMillis() - begin;
 
             System.out.println(toPrettyFormat(answer));
@@ -76,7 +71,7 @@ public class MainExtracteEnumAndListCodeLlama {
                                          + "topics: %s\n"
                                          + "****************************************\n";
 
-    public static String toPrettyFormat(CustomPojo extract) {
+    public static String toPrettyFormat(EnumAndListPojo extract) {
         return String.format(FORMAT, extract.gender, extract.topics);
     }
 }
