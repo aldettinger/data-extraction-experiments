@@ -1,6 +1,6 @@
 Operator: Hello, how may I help you ?
 Customer: Hello, I'm John. I need to share a problem with you. Actually, the insurance has reimbursed only half the money I have spent due to the accident.
-Operator: Hello John, could you please give me your last name so that I can find you contract.
+Operator: Hello John, could you please give me your last name so that I can find your contract.
 Customer: Sure, my surname is Doe.
 Operator: And last thing, I need to know the date you were born.
 Customer: Yes, so I was born in 2001, actually during the first day of November.
