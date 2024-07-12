@@ -11,7 +11,7 @@ docker run -p 11434:11434 langchain4j/ollama-${MODEL_NAME}:latest
 
 # Let's start with Open Extraction
 
-With `MainOpenExtractCodeLlama`, we ask the model to output JSON only.
+With `_1_MainOpenExtractCodeLlama`, we ask the model to output JSON only.
 We do not mandate anything more about the expected structure.
 As such, the model is able to propose some JSON structure on its own, let's review below what is generated:
 
@@ -47,7 +47,7 @@ It's interesting to see how the semantic meaning of the text influences the prop
 
 # Let's switch to closed extraction
 
-In `MainExtractJsonCodeLlama`, we now force the output JSON schema as below:
+In `_2_MainExtractJsonCodeLlama`, we now force the output JSON schema as below:
 
 ```
 {
@@ -133,7 +133,7 @@ See below how well it behaves:
 
 # Let's generate Result<String> in order to retrieve sources and tokenUsage
 
-With `MainExtractResultCodeLlama`, we then specify a lighter output JSON schema:
+With `_3_MainExtractResultCodeLlama`, we then specify a lighter output JSON schema:
 
 ```
 {
@@ -187,7 +187,7 @@ Note that sources is <code>null</code> here as we don't use Retrieval Augmentate
 
 # Let's extract Java objects like Enum and List
 
-`Langchain4j` also allows to return custom pojos. This setup is tested in `MainExtractEnumAndListCodeLlama` as shown below:
+`Langchain4j` also allows to return custom pojos. This setup is tested in `_4_MainExtractEnumAndListCodeLlama` as shown below:
 
 ```
     enum GENDER {
@@ -226,7 +226,7 @@ topics: [insurance, accident, police station]
 
 # Let's define a more complex Pojo
 
-In `MainExtractCustomPojoCodeLlama`, we merge some complexities from previous experiments.
+In `_5_MainExtractCustomPojoCodeLlama`, we merge some complexities from previous experiments.
 
 ```
 static final String CUSTOM_POJO_EXTRACT_PROMPT
@@ -280,7 +280,7 @@ MODEL_NAME=llama3
 docker run -p 11434:11434 langchain4j/ollama-${MODEL_NAME}:latest
 ```
 
-`MainExtractCustomPojoLlama3` will then output:
+`_6_MainExtractCustomPojoLlama3` will then output:
 
 ```
 ****************************************
@@ -316,7 +316,7 @@ MODEL_NAME=mistral
 docker run -p 11434:11434 langchain4j/ollama-${MODEL_NAME}:latest
 ```
 
-The outcome of `MainExtractCustomPojoMistral` is found below:
+The outcome of `_7_MainExtractCustomPojoMistral` is found below:
 
 ```
 ****************************************

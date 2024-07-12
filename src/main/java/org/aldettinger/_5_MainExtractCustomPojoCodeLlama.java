@@ -4,7 +4,7 @@ import static org.apache.commons.io.IOUtils.resourceToString;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.util.List;
+import java.time.LocalDate;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
@@ -13,27 +13,29 @@ import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 import kotlin.text.Charsets;
 
-public class MainExtractEnumAndListCodeLlama {
+public class _5_MainExtractCustomPojoCodeLlama {
 
     static final String MODEL_NAME = "codellama"; // Other values could be "orca-mini", "mistral", "llama2", "llama3", "codellama", "phi" or "tinyllama"
     static final String LANGCHAIN4J_OLLAMA_IMAGE_NAME = "langchain4j/ollama-" + MODEL_NAME + ":latest";
 
-    static final String ENUM_AND_LIST_EXTRACT_PROMPT
-            = "Extract information about a customer from the text delimited by triple backticks: ```{{text}}```.";
+    /**
+     * The customer birthday date format need to be forced to comply with what langchain4j gson parser need.
+     */
+    static final String CUSTOM_POJO_EXTRACT_PROMPT
+            = "Extract information about a customer from the text delimited by triple backticks: ```{{text}}```."
+              + "The customerBirthday field should be formatted as YYYY-MM-DD."
+              + "The summary field should concisely relate the customer main ask.";
 
-    enum GENDER {
-        MALE,
-        FEMALE
+    static class CustomPojo {
+        private boolean customerSatisfied;
+        private String customerName;
+        private LocalDate customerBirthday;
+        private String summary;
     }
 
-    static class EnumAndListPojo {
-        private GENDER gender;
-        private List<String> topics;
-    }
-
-    interface CamelEnumAndListExtractor {
-        @UserMessage(ENUM_AND_LIST_EXTRACT_PROMPT)
-        EnumAndListPojo extractFromText(@V("text") String text);
+    interface CamelCustomPojoExtractor {
+        @UserMessage(CUSTOM_POJO_EXTRACT_PROMPT)
+        CustomPojo extractFromText(@V("text") String text);
     }
 
     public static void main(String[] args) throws IOException {
@@ -48,7 +50,7 @@ public class MainExtractEnumAndListCodeLlama {
                 .timeout(Duration.ofMinutes(1L))
                 .build();
 
-        CamelEnumAndListExtractor extractor = AiServices.create(CamelEnumAndListExtractor.class, model);
+        CamelCustomPojoExtractor extractor = AiServices.create(CamelCustomPojoExtractor.class, model);
 
         String[] conversationResourceNames = {
                 "01_sarah-london-10-07-1986-satisfied.txt", "02_john-doe-01-11-2001-unsatisfied.txt",
@@ -58,7 +60,7 @@ public class MainExtractEnumAndListCodeLlama {
             String conversation = resourceToString(String.format("/texts/%s", conversationResourceName), Charsets.UTF_8);
 
             long begin = System.currentTimeMillis();
-            EnumAndListPojo answer = extractor.extractFromText(conversation);
+            CustomPojo answer = extractor.extractFromText(conversation);
             long duration = System.currentTimeMillis() - begin;
 
             System.out.println(toPrettyFormat(answer));
@@ -67,11 +69,14 @@ public class MainExtractEnumAndListCodeLlama {
     }
 
     private final static String FORMAT = "****************************************\n"
-                                         + "gender: %s\n"
-                                         + "topics: %s\n"
+                                         + "customerSatisfied: %s\n"
+                                         + "customerName: %s\n"
+                                         + "customerBirthday: %td %tB %tY\n"
+                                         + "summary: %s\n"
                                          + "****************************************\n";
 
-    public static String toPrettyFormat(EnumAndListPojo extract) {
-        return String.format(FORMAT, extract.gender, extract.topics);
+    public static String toPrettyFormat(CustomPojo extract) {
+        return String.format(FORMAT, extract.customerSatisfied, extract.customerName, extract.customerBirthday,
+                extract.customerBirthday, extract.customerBirthday, extract.summary);
     }
 }

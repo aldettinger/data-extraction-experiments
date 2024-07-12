@@ -17,39 +17,23 @@ import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 import kotlin.text.Charsets;
 
-public class MainExtractJsonCodeLlama {
+public class _1_MainOpenExtractCodeLlama {
 
     static final String MODEL_NAME = "codellama"; // Other values could be "orca-mini", "mistral", "llama2", "llama3", "codellama", "phi" or "tinyllama"
     static final String LANGCHAIN4J_OLLAMA_IMAGE_NAME = "langchain4j/ollama-" + MODEL_NAME + ":latest";
 
-    static final String CODE_LLAMA_PROMPT = "Extract information from the text delimited by triple backticks: ```{{text}}```."
-                                            + "The output should be formatted into JSON, strictly conforming to the JSON schema delimited by triple dollars."
-                                            + "$$${"
-                                            + " conversation:{"
-                                            + "  emotions: {"
-                                            + "   customerSatisfied: (type: boolean)"
-                                            + "  },"
-                                            + "  entities: {"
-                                            + "   id: {"
-                                            + "    customerName: (type: string)"
-                                            + "   },"
-                                            + "   attributes: {"
-                                            + "    customerBirthday: (type: date string)"
-                                            + "   }"
-                                            + "  },"
-                                            + "  summary: (type: string)"
-                                            + " }"
-                                            + "}$$$."
-                                            + "The summary field should be a very concise summary of the text delimited by triple backticks, just a few words."
-                                            + "The customerBirthday field should be formatted as DD-MM-YYYY."
-                                            + "Only fields appearing in the JSON schema should be output. Do not create extra field.";
+    static final String OPEN_EXTRACT_PROMPT
+            = "Extract information about an insurance related discussion from the text delimited by triple backticks: ```{{text}}```."
+              +
+              "The answer should be strictly formatted into JSON." +
+              "The answer should only contain information quoted in the text delimited by triple backticks, do not invent information.";
 
-    static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
-
-    interface CamelExtractor {
-        @UserMessage(CODE_LLAMA_PROMPT)
+    interface CamelOpenExtractor {
+        @UserMessage(OPEN_EXTRACT_PROMPT)
         String extractFromText(@V("text") String text);
     }
+
+    static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     public static void main(String[] args) throws IOException {
 
@@ -63,7 +47,7 @@ public class MainExtractJsonCodeLlama {
                 .timeout(Duration.ofMinutes(1L))
                 .build();
 
-        CamelExtractor extractor = AiServices.create(CamelExtractor.class, model);
+        CamelOpenExtractor extractor = AiServices.create(CamelOpenExtractor.class, model);
 
         String[] conversationResourceNames = {
                 "01_sarah-london-10-07-1986-satisfied.txt", "02_john-doe-01-11-2001-unsatisfied.txt",

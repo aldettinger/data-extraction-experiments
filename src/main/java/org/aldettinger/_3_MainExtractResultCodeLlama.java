@@ -4,38 +4,37 @@ import static org.apache.commons.io.IOUtils.resourceToString;
 
 import java.io.IOException;
 import java.time.Duration;
-import java.time.LocalDate;
 
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.Result;
 import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 import kotlin.text.Charsets;
 
-public class MainExtractCustomPojoMistral {
+public class _3_MainExtractResultCodeLlama {
 
-    static final String MODEL_NAME = "mistral"; // Other values could be "orca-mini", "mistral", "llama2", "llama3", "codellama", "phi" or "tinyllama"
+    static final String MODEL_NAME = "codellama"; // Other values could be "orca-mini", "mistral", "llama2", "llama3", "codellama", "phi" or "tinyllama"
     static final String LANGCHAIN4J_OLLAMA_IMAGE_NAME = "langchain4j/ollama-" + MODEL_NAME + ":latest";
 
-    /**
-     * The customer birthday date format need to be forced to comply with what langchain4j gson parser need.
-     */
-    static final String CUSTOM_POJO_EXTRACT_PROMPT
-            = "Extract information about a customer from the text delimited by triple backticks: ```{{text}}```."
-              + "The customerBirthday field should be formatted as YYYY-MM-DD."
-              + "The summary field should concisely relate the customer main ask.";
+    static final String EXTRACT_RESULT_PROMPT = "Extract information from the text delimited by triple backticks: ```{{text}}```."
+            + "The output should be formatted into JSON, strictly conforming to the JSON schema delimited by triple dollars."
+            + "$$${"
+            + " customerSatisfied: (type: boolean),"
+            + " customerName: (type: string),"
+            + " customerBirthday: (type: date string)"
+            + "}$$$."
+            + "The customerBirthday field should be formatted as DD-MM-YYYY."
+            + "Only fields appearing in the JSON schema should be output. Do not create extra field.";
 
-    static class CustomPojo {
-        private boolean customerSatisfied;
-        private String customerName;
-        private LocalDate customerBirthday;
-        private String summary;
-    }
-
-    interface CamelCustomPojoExtractor {
-        @UserMessage(CUSTOM_POJO_EXTRACT_PROMPT)
-        CustomPojo extractFromText(@V("text") String text);
+    // TODO: Is there a langchain4j bug when one return a Result<CustomPojo> ???
+    // ServiceOutputParser.typeOf: "} else if (((Class<?>) type).isEnum()) {"
+    // ClassCastException ala
+    // https://stackoverflow.com/questions/73982858/java-generics-reflection-get-classt-from-generic-returns-typevariableimpl-ins
+    interface CamelResultExtractor {
+        @UserMessage(EXTRACT_RESULT_PROMPT)
+        Result<String> extractFromText(@V("text") String text);
     }
 
     public static void main(String[] args) throws IOException {
@@ -50,7 +49,7 @@ public class MainExtractCustomPojoMistral {
                 .timeout(Duration.ofMinutes(1L))
                 .build();
 
-        CamelCustomPojoExtractor extractor = AiServices.create(CamelCustomPojoExtractor.class, model);
+        CamelResultExtractor extractor = AiServices.create(CamelResultExtractor.class, model);
 
         String[] conversationResourceNames = {
                 "01_sarah-london-10-07-1986-satisfied.txt", "02_john-doe-01-11-2001-unsatisfied.txt",
@@ -60,7 +59,7 @@ public class MainExtractCustomPojoMistral {
             String conversation = resourceToString(String.format("/texts/%s", conversationResourceName), Charsets.UTF_8);
 
             long begin = System.currentTimeMillis();
-            CustomPojo answer = extractor.extractFromText(conversation);
+            Result<String> answer = extractor.extractFromText(conversation);
             long duration = System.currentTimeMillis() - begin;
 
             System.out.println(toPrettyFormat(answer));
@@ -69,14 +68,12 @@ public class MainExtractCustomPojoMistral {
     }
 
     private final static String FORMAT = "****************************************\n"
-                                         + "customerSatisfied: %s\n"
-                                         + "customerName: %s\n"
-                                         + "customerBirthday: %td %tB %tY\n"
-                                         + "summary: %s\n"
+                                         + "content: %s\n"
+                                         + "sources: %s\n"
+                                         + "tokenUsage: %s\n"
                                          + "****************************************\n";
 
-    public static String toPrettyFormat(CustomPojo extract) {
-        return String.format(FORMAT, extract.customerSatisfied, extract.customerName, extract.customerBirthday,
-                extract.customerBirthday, extract.customerBirthday, extract.summary);
+    public static String toPrettyFormat(Result<String> extract) {
+        return String.format(FORMAT, extract.content(), extract.sources(), extract.tokenUsage());
     }
 }

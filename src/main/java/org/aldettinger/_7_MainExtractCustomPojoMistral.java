@@ -13,9 +13,9 @@ import dev.langchain4j.service.UserMessage;
 import dev.langchain4j.service.V;
 import kotlin.text.Charsets;
 
-public class MainExtractCustomPojoCodeLlama {
+public class _7_MainExtractCustomPojoMistral {
 
-    static final String MODEL_NAME = "codellama"; // Other values could be "orca-mini", "mistral", "llama2", "llama3", "codellama", "phi" or "tinyllama"
+    static final String MODEL_NAME = "mistral"; // Other values could be "orca-mini", "mistral", "llama2", "llama3", "codellama", "phi" or "tinyllama"
     static final String LANGCHAIN4J_OLLAMA_IMAGE_NAME = "langchain4j/ollama-" + MODEL_NAME + ":latest";
 
     /**
